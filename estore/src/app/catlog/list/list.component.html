@@ -1,0 +1,9 @@
+<div>
+  <ul *ngFor="let p of products">
+    <!--<li>{{product.title }} | {{product.description}} | {{product.quantity}}</li>-->
+    <li>
+    <app-details [product] ="p" ></app-details>
+    </li>
+
+  </ul>
+</div>
