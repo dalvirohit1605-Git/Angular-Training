@@ -42,3 +42,7 @@ export class ProductService {
     this.products = this.products.filter(p => p.id !== id);
   }
   } 
+
+
+
+  

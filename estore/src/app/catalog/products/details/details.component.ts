@@ -13,9 +13,9 @@ import { CounterComponent } from '../counter/counter.component';
 })
 export class DetailsComponent implements OnInit {
  
-   @Input () product: Product|undefined;
+  @Input () product: Product|undefined;
 
-    ngOnInit() {}
+  ngOnInit() {}
     
  
    onUpdate(data:any){
