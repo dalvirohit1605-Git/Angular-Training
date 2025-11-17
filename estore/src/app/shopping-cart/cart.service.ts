@@ -1,57 +1,75 @@
 import { Injectable } from '@angular/core';
-import { Item as CartItem } from './models/Item';
+import { Item } from './models/Item';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CartService {
+  private storageKey = 'shoppingCart';
 
-private storageKey = 'shoppingCart';
+  // ✅ Add item to cart
+  addToCart(product: Item): void {
+    const storedCart = JSON.parse(
+      sessionStorage.getItem(this.storageKey) || '[]'
+    );
+    const cart: Item[] = Array.isArray(storedCart) ? storedCart : [];
 
-  constructor() {
-    // Initialize sessionStorage with demo data if empty
-    //if (!sessionStorage.getItem(this.storageKey)) {
-  
-     
+    const existing = cart.find((i) => i.productId === product.productId);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    sessionStorage.setItem(this.storageKey, JSON.stringify(cart));
   }
 
-  //Add Product to Cart
-  addToCart(item: CartItem): void {
-     
+  // ✅ Get all cart items
+  getCartItems(): Item[] {
+    try {
+      const storedCart = JSON.parse(
+        sessionStorage.getItem(this.storageKey) || '[]'
+      );
+      return Array.isArray(storedCart) ? storedCart : [];
+    } catch {
+      return [];
+    }
   }
 
-  //Get All Cart Items
-  getCartItems(): CartItem[] {
-    
-    return [];
-  }
-
-  //Update Quantity
   updateQuantity(productId: number, quantity: number): void {
-     
+    const cart = this.getCartItems();
+
+    const item = cart.find((i) => i.productId === productId);
+    if (item) {
+      item.quantity = quantity > 0 ? quantity : 1;
+    }
+
+    sessionStorage.setItem(this.storageKey, JSON.stringify(cart));
   }
 
-  //Remove Product from Cart
+  getProductQuantity(productId: number): number {
+    const cart = this.getCartItems() || []; // ensure cart is not null or undefined
+    const item = cart.find((i) => i.productId === productId);
+    return item ? item.quantity : 1; // return 0 if product not found
+  }
+
+  // ✅ Remove single product
   removeFromCart(productId: number): void {
-   
+    const cart = this.getCartItems().filter((i) => i.productId !== productId);
+    sessionStorage.setItem(this.storageKey, JSON.stringify(cart));
   }
 
-  //Clear Entire Cart
+  // ✅ Clear cart
   clearCart(): void {
-  
+    sessionStorage.removeItem(this.storageKey);
   }
 
-  //Calculate Total Items
-  getTotalItems(): number {
-  return 45;
-  }
-
-  //Calculate Total Amount
+  // ✅ Calculate total price
   getTotalPrice(): number {
-    return 12;
-  }
-
-  // Private helper
-  private saveCart(cart: CartItem[]): void {
-    //save data to sessionStorage
+    const cart = this.getCartItems();
+    return cart.reduce(
+      (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
+      0
+    );
   }
 }

@@ -1,17 +1,51 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CatalogModule } from './catalog/catalog.module';
+
+import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { SignInComponent } from './sign-in/sign-in.component';
 import { CommonModule } from '@angular/common';
-import { MembershipModule } from './membership/membership.module';
-import { ShoppingCartModule } from './shopping-cart/shopping-cart.module';
+import { CartComponent } from './shopping-cart/cart/cart.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, CatalogModule, ShoppingCartModule, MembershipModule],
+  imports: [
+    CommonModule,
+    RouterOutlet,
+    RouterLink,
+    SignInComponent,
+    CartComponent,
+  ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
-  title = 'Transflower Store';
+  title = 'Estore';
+
+  loggedInStatus: boolean | undefined;
+
+  links: any = [];
+
+  constructor() {
+    this.links = ['home', 'about', 'services', 'protected'];
+  }
+  convertToBoolean(result: string): boolean {
+    let status = false;
+    if (result == 'true') {
+      status = true;
+    }
+    return status;
+  }
+
+  ngOnInit() {
+    console.log('Router container component ngOnint is getting invoked');
+    let strStatus: string | null = localStorage.getItem('loggedInStatus');
+    console.log(' in routerocntainer strStatus =' + strStatus);
+    if (strStatus != null) {
+      this.loggedInStatus = true;
+      //this.convertToBoolean(strStatus);
+      console.log(this.loggedInStatus);
+    }
+  }
 }

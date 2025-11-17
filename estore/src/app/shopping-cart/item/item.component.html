@@ -1,1 +1,19 @@
-<p>item works!</p>
+<td class="text-center">
+  <img src="{{item?.imageUrl}}" width="60" height="60" class="rounded">
+</td>
+<td>{{item?.title}}</td>
+<td class="text-end">₹ {{item?.price}}</td>
+<td class="text-center">
+  <input type="number"
+         class="form-control text-center mx-auto"
+         style="width: 80px;"
+         min="1"
+         [(ngModel)]="item.quantity"
+         (change)="onQuantityChange()" />
+</td>
+<td class="text-end">₹ {{ item.price * item.quantity }}</td>
+<td class="text-center">
+  <button class="btn btn-sm btn-outline-danger" (click)="OnRemoveClick(1)">
+    <i class="bi bi-trash"></i> Remove
+  </button>
+</td>
